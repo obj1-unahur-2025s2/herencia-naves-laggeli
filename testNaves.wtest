@@ -1,0 +1,43 @@
+import naves.*
+
+describe "Testeo de las naves" {
+    const naveBaliza = new NaveBaliza(velocidad = 250, dirección = -10, combustible = 5000, balizaDeColor = "Rojo")
+    const navePasajeros = new NavePasajeros(velocidad = 150, dirección = 10, combustible = 5500, pasajeros = 50)
+    const misil1 = new Misil(estáDesplegado = true)
+    const misil2 = new Misil(estáDesplegado = true)
+    const misil3 = new Misil(estáDesplegado = false)
+    const misil4 = new Misil(estáDesplegado = false)
+    const naveCombateSigilosa = new NaveCombateSigilosa(velocidad = 250, dirección = -10, combustible = 5000, estáVisible = true)
+    method initialize() {
+        naveCombateSigilosa.agregarMisil(misil1)
+        naveCombateSigilosa.agregarMisil(misil2)
+        naveCombateSigilosa.agregarMisil(misil3)
+        naveCombateSigilosa.agregarMisil(misil4)
+    }
+    test "La NaveBaliza después de preparar un viaje no está relajada" {
+    naveBaliza.prepararViaje()
+    assert.equals("Verde", naveBaliza.balizaDeColor())
+    assert.equals(0, naveBaliza.dirección())
+    assert.equals(5250, naveBaliza.velocidad())
+    assert.equals(35000, naveBaliza.combustible())
+    assert.notThat(naveBaliza.estáDeRelajo())
+    }
+    test "La NavePasajeros después de cargar 50 raciones de bebida, 25 de comida y preparar un viaje, no está relajada" {
+    navePasajeros.cargarComida(25)
+    navePasajeros.cargarBebida(50)
+    navePasajeros.prepararViaje()
+    assert.equals(225, navePasajeros.racionesDeComida())
+    assert.equals(350, navePasajeros.racionesDeBebida())
+    assert.equals(10, navePasajeros.dirección())
+    assert.equals(5150, navePasajeros.velocidad())
+    assert.equals(35500, navePasajeros.combustible())
+    assert.notThat(navePasajeros.estáDeRelajo())
+    }
+    test "La NaveCombateSigilosa recibe una amenaza, se pone invisible y desplega los misiles" {
+    naveCombateSigilosa.recibirAmenaza()
+    assert.that(naveCombateSigilosa.todosLosMisilesEstánDesplegados())
+    assert.that(naveCombateSigilosa.estáInvisible())
+    assert.that(naveCombateSigilosa.emitioMensaje("Amenaza recibida"))
+    assert.equals("Amenaza recibida", naveCombateSigilosa.últimoMensajeEmitido())
+    } 
+}
